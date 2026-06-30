@@ -13,8 +13,12 @@ The proof is the paper's two-case dichotomy on the least minimum `n₁`:
 * **Above the window** `n₁ > 29·2^71`: the closing denominator lift forces
   `K ≥ Q`, while Simons–de Weger forces `K < Q` — a contradiction.
 
-Everything below the axiom interface is **kernel-checked**.  The final
-`#print axioms` line exposes the complete trust base.
+Everything below the axiom interface is **kernel-checked**. The theorem's trust
+base can be audited with:
+
+```bash
+lake env lean audit/AxiomReport.lean
+```
 -/
 
 namespace CollatzM96
@@ -32,22 +36,3 @@ theorem no_nontrivial_collatz_96_cycle : ¬ ∃ C : MCycle, C.m = 96 := by
     exact absurd hQ (not_le.mpr hK)
 
 end CollatzM96
-
-/-
-The trust base of the headline theorem.  Expect exactly the four named axioms
-that carry mathematical content —
-
-  CollatzM96.barina
-  CollatzM96.enclosure_above_window
-  CollatzM96.simons_deWeger
-  CollatzM96.finite_window_excluded
-
-— plus Lean/Mathlib's standard logical foundations
-(`propext`, `Classical.choice`, `Quot.sound`), which appear in essentially every
-Mathlib development and are not problem-specific assumptions.
-
-Note `enclosure_floor` / `K_ge_K0` (the first lift) do NOT appear: the headline
-proof needs only the closing lift, because the finite search already absorbs the
-`K₀`-derived stages.  See docs/TRUST.md.
--/
-#print axioms CollatzM96.no_nontrivial_collatz_96_cycle

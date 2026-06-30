@@ -10,7 +10,8 @@ Mathlib** (you do not recompile Mathlib).
 > only stable, long-standing Mathlib lemmas, and every numeral asserted by a
 > `norm_num`/`decide` step was independently checked with exact-integer
 > arithmetic (see `docs/THEOREM_MAP.md`). Please run the build yourself with the
-> commands below; the `#print axioms` output is the definitive trust statement.
+> commands below; the explicit axiom audit command is the definitive trust
+> statement.
 
 ## 1. Install Lean / lake (via `elan`)
 
@@ -32,31 +33,40 @@ lake exe cache get      # downloads prebuilt Mathlib .olean files (the slow step
 lake build              # compiles this project on top of Mathlib
 ```
 
-A successful build prints the axiom list for the main theorem (from the
-`#print axioms` line at the bottom of `CollatzM96/Main.lean`).
+A successful build should complete without printing the theorem axiom list.
 
-## 3. Inspect the result interactively (recommended)
+## 3. Audit the theorem's trust base
 
-Open `CollatzM96/Main.lean` in VS Code with the Lean 4 extension, or run:
+Run:
 
 ```bash
-lake env lean CollatzM96/Main.lean
+lake env lean audit/AxiomReport.lean
 ```
 
 You should see the theorem accepted and an axiom list of the form:
 
 ```
 'CollatzM96.no_nontrivial_collatz_96_cycle' depends on axioms:
- [propext, Classical.choice, Quot.sound,
+ [propext, Classical.choice,
   CollatzM96.barina,
   CollatzM96.enclosure_above_window,
+  CollatzM96.finite_window_excluded,
   CollatzM96.simons_deWeger,
-  CollatzM96.finite_window_excluded]
+  Quot.sound]
 ```
 
 The first three are Lean/Mathlib's standard logical foundations. The last four
 are the **only** problem-specific assumptions; they are explained in
 `docs/TRUST.md`.
+
+## 4. Inspect the result interactively (recommended)
+
+Open `CollatzM96/Main.lean` in VS Code with the Lean 4 extension. To reproduce
+the axiom audit without opening an editor, run:
+
+```bash
+lake env lean audit/AxiomReport.lean
+```
 
 To confirm there are **no `sorry`s**, search the sources:
 

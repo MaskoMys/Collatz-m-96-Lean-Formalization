@@ -9,8 +9,12 @@ The development contains **no `sorry` and no `admit`**: every `theorem` is close
 by genuine tactic proofs that the Lean kernel verifies. The published inputs and
 the external computation are introduced as **named `axiom`s** — the standard,
 auditable way to formalize a result that rests on prior theorems and on a
-finished computer search. `#print axioms` (run at the end of `Main.lean`) makes
-the entire assumption set explicit and machine-readable.
+finished computer search. The audit file's `#print axioms` command makes the
+entire assumption set explicit and machine-readable:
+
+```bash
+lake env lean audit/AxiomReport.lean
+```
 
 `sorry-free` therefore means *"no holes hidden inside proofs; all assumptions are
 named and visible at the top level."* It does **not** mean *"every prerequisite
@@ -70,7 +74,7 @@ A fifth axiom, **`enclosure_floor`** (the *first* denominator lift, giving
 `K ≥ K₀`), is included for faithfulness to §11 but does **not** appear under the
 headline theorem: the finite search already absorbs the `K₀`-derived descent
 stages, so the top-level proof needs only the *closing* lift. You can confirm
-this from the `#print axioms` output.
+this from the audit command's `#print axioms` output.
 
 ## The path to discharging the assumptions in-kernel
 

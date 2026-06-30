@@ -8,7 +8,7 @@ A Lean 4 formalization of the mathematical core and logical skeleton of
 
 It is **sorry-free** and **builds with `lake`** against the pinned toolchain. The
 Lean kernel checks the entire argument **down to four explicitly named
-assumptions**, which the build prints for you.
+assumptions**, which a separate audit command prints for you.
 
 ---
 
@@ -32,7 +32,9 @@ CollatzM96/
   AffineIdentity.lean affine prefix identity (Lemma 2.2)          ← proved
   Constants.lean      every exact constant + arithmetic check     ← proved
   Reduction.lean      the m-cycle object + the 4 assumptions      ← interface
-  Main.lean           Theorem 11.3  +  #print axioms              ← proved
+  Main.lean           Theorem 11.3                                ← proved
+audit/
+  AxiomReport.lean    explicit #print axioms trust-base audit
 docs/  BUILD.md · TRUST.md · THEOREM_MAP.md
 ```
 
@@ -71,14 +73,19 @@ the descent stages), and the final two-case contradiction. See the table in
 4. `finite_window_excluded` — the **75-branch exact search** result
    *(assumed; the computation is **not** re-run inside Lean)*.
 
-Running the project prints precisely these (next to Lean's standard
+Running the audit command prints precisely these (next to Lean's standard
 `propext / Classical.choice / Quot.sound`):
+
+```bash
+lake env lean audit/AxiomReport.lean
+```
 
 ```
 'CollatzM96.no_nontrivial_collatz_96_cycle' depends on axioms:
- [propext, Classical.choice, Quot.sound,
+ [propext, Classical.choice,
   CollatzM96.barina, CollatzM96.enclosure_above_window,
-  CollatzM96.simons_deWeger, CollatzM96.finite_window_excluded]
+  CollatzM96.finite_window_excluded, CollatzM96.simons_deWeger,
+  Quot.sound]
 ```
 
 > **Honest headline.** This is a *verified reduction*, not a from-scratch
@@ -97,7 +104,8 @@ Running the project prints precisely these (next to Lean's standard
 curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh
 # 2. from the project root:
 lake exe cache get      # prebuilt Mathlib (the only slow step)
-lake build              # checks the project; prints the axiom list
+lake build              # checks the project
+lake env lean audit/AxiomReport.lean  # prints the theorem's axiom list
 # 3. confirm there are no sorries (prints nothing):
 grep -rn --include=*.lean -E '\bsorry\b|\badmit\b' CollatzM96
 ```
@@ -109,7 +117,8 @@ exact-integer arithmetic (`docs/THEOREM_MAP.md`).
 > The authoring environment had no network access to the Lean toolchain servers,
 > so `lake build` was not run there; the sources target the pinned
 > `leanprover/lean4:v4.15.0` toolchain and use only long-stable Mathlib lemmas.
-> The `#print axioms` line is the definitive trust statement — please run it.
+> The audit file's `#print axioms` line is the definitive trust statement —
+> please run it with `lake env lean audit/AxiomReport.lean`.
 
 ## Impact and how to cite
 

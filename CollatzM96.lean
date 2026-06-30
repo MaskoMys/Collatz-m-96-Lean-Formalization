@@ -11,7 +11,11 @@ Importing this module builds the whole development:
   • AffineIdentity.lean — affine prefix identity, Lemma 2.2           (proved)
   • Constants.lean      — exact constants + arithmetic certificate    (proved)
   • Reduction.lean      — m-cycle object + axiom interface + lifts    (mixed)
-  • Main.lean           — Theorem 11.3 + #print axioms                (proved)
+  • Main.lean           — Theorem 11.3                                (proved)
+
+The axiom report is available separately:
+
+  lake env lean audit/AxiomReport.lean
 
 See README.md for scope, trust, build, and citation guidance.
 -/

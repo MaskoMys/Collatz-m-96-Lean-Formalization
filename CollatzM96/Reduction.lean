@@ -15,7 +15,11 @@ the local minima `n 1, …, n m` (rotated so `n 1` is least), the odd-state peri
 Four facts about such a cycle are **imported as named axioms** rather than proved
 from the Collatz map.  Three are *published theorems*; one is the *externally
 verified computation* at the core of the paper.  These — and **only** these —
-are what `#print axioms` will reveal under the main theorem.
+are what the audit command will reveal under the main theorem:
+
+```bash
+lake env lean audit/AxiomReport.lean
+```
 
 ⚠️  **Honest scope.**  `enclosure_*`, `simons_deWeger`, `barina`, and
 `finite_window_excluded` are *assumptions*, not Lean proofs.  In particular the
